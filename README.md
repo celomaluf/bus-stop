@@ -29,7 +29,7 @@ There should be something like this in the console.
   - The first script essentially regards the creation of table 'bus_stop';
   - The second one copies the CSV data into the bus_stop table. 
 
-### http-verticle
+## http-verticle
 ##### 1) Let's install and run the http-verticle.
 
 Make sure you have already installed the application previously, also open a new terminal to execute the following command.
@@ -53,7 +53,7 @@ Regarding questions number 2 and 3, the 'atBusStop' parameter behaves as follows
     if false it filters the vehicles that are not at a bus stop
     if null it doesn't filter by it
 
-### Cluster
+## Cluster
 Now that we have both the Http and Database verticles running let's check in one of the terminals used if they have joined the cluster. It should look 
 like as follows.
 
@@ -63,7 +63,7 @@ like as follows.
     ]
 Eventually each verticle can be configured to scale up independently from each other.
 
-##### Answers
+## Answers
 - 1 `curl -X POST "localhost:8080/operators" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"startTime\":1352246400000000,\"endTime\":1352332799000000}"`
 
 - 2 `curl -X POST "localhost:8080/vehicles" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"startTime\":1352246400000000,\"endTime\":1352332799000000,\"operator\":\"CF\"}"`
@@ -95,4 +95,4 @@ Eventually each verticle can be configured to scale up independently from each o
     - jOOQ Object Oriented Querying, commonly known as jOOQ, is a light database-mapping software library in Java that implements the active record pattern.
     
 - HazelCast 3.12.2
-    - Default Cluster Manager used by Vert.x
+    - Default Cluster Manager used by Vert.x.
