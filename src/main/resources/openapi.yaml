@@ -1,0 +1,206 @@
+openapi: 3.0.2
+info:
+  title: Bus Stop
+  version: 1.0.0
+paths:
+  /operators:
+    post:
+      operationId: findAllOperatorsByTS
+      x-vertx-event-bus: http-verticle-read-bus-stop-service
+      summary: It loads all operators given a time frame
+      tags:
+        - BUS STOP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OperatorRequest'
+      responses:
+        '200':
+          description: The operators were successfully loaded
+          content:
+            application/json:
+              schema:
+                type: string
+                items:
+                  $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Something wrong happened, wrong body information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorModel'
+
+  /vehicles:
+    post:
+      operationId: findAllVehiclesByTSAndOperator
+      x-vertx-event-bus: http-verticle-read-bus-stop-service
+      summary: It loads all vehicles given a time frame, an operator and if it is at a bus stop
+      tags:
+        - BUS STOP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleRequest'
+      responses:
+        '200':
+          description: The vehicles were successfully loaded
+          content:
+            application/json:
+              schema:
+                type: string
+                items:
+                  $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Something wrong happened, wrong body information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorModel'
+  /vehicles/traces:
+    post:
+      operationId: findAllTracesByTSAndVehicle
+      x-vertx-event-bus: http-verticle-read-bus-stop-service
+      summary: It loads all vehicles traces ordered by timestamp, given a time frame and a vehicleId
+      tags:
+        - BUS STOP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleTraceRequest'
+      responses:
+        '200':
+          description: The vehicles were successfully loaded
+          content:
+            application/json:
+              schema:
+                type: string
+                items:
+                  $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Something wrong happened, wrong body information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorModel'
+components:
+  schemas:
+    ApiErrorModel:
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        message:
+          type: string
+        status:
+          type: integer
+          minimum: 100
+          maximum: 600
+        errors:
+          type: array
+          items:
+            type: string
+        validations:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParameterValidationErrorModel'
+
+    ParameterValidationErrorModel:
+      type: object
+      properties:
+        dataPath:
+          type: string
+        message:
+          type: string
+        keyword:
+          type: string
+      additionalProperties: false
+      required:
+        - dataPath
+        - message
+        - keyword
+
+    OperatorRequest:
+      type: object
+      properties:
+        startTime:
+          type: integer
+          format: int32
+        endTime:
+          type: integer
+          format: int32
+      additionalProperties: false
+      required:
+        - startTime
+        - endTime
+      example:
+        {
+          startTime: 1352246400000000,
+          endTime: 1352332799000000
+        }
+
+    VehicleRequest:
+      type: object
+      properties:
+        startTime:
+          type: integer
+          format: int32
+        endTime:
+          type: integer
+          format: int32
+        operator:
+          type: string
+        atBusStop:
+          type: boolean
+          nullable: true
+      additionalProperties: false
+      required:
+        - startTime
+        - endTime
+        - operator
+      example:
+        {
+          startTime: 1352246400000000,
+          endTime: 1352332799000000,
+          operator: "CF",
+          atBusStop: true
+        }
+
+    VehicleTraceRequest:
+      type: object
+      properties:
+        startTime:
+          type: integer
+          format: int32
+        endTime:
+          type: integer
+          format: int32
+        vehicleId:
+          type: integer
+          format: int32
+      additionalProperties: false
+      required:
+        - startTime
+        - endTime
+        - vehicleId
+      example:
+        {
+          startTime: 1352246400000000,
+          endTime: 1352332799000000,
+          vehicleId: 43001
+        }
+
+    SuccessResponse:
+      type: array
+      items:
+        type: string
+      additionalProperties: false
+
+
+
